@@ -8,29 +8,15 @@
 <body>
     <h1>Cookie Extractor</h1>
     <script>
-        fetch('http://localhost:3000')
-            .then(response => response.text())
+        fetch('http://localhost:3000/get-cookies')
+            .then(response => response.json())
             .then(data => {
-                console.log('Response data:', data);
-                fetch('http://localhost:3000/receive-cookies', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ cookies: document.cookie })
-                })
-                .then(response => response.text())
-                .then(data => {
-                    alert('Cookies sent to server: ' + data);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('Error sending cookies: ' + error);
-                });
+                alert('Cookies: ' + JSON.stringify(data));
+                console.log('Cookies:', data);
             })
             .catch((error) => {
-                console.error('Error fetching page:', error);
-                alert('Error fetching page: ' + error);
+                console.error('Error:', error);
+                alert('Error fetching cookies: ' + error);
             });
     </script>
 </body>

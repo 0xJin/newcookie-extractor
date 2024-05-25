@@ -28,6 +28,5 @@ jobs:
 
     - name: Run server
       run: npm run start
-      env:
-        PORT: 3000
+
 

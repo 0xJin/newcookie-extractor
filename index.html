@@ -8,18 +8,7 @@
 <body>
     <h1>Estrattore di Cookie</h1>
     <script>
-        // Funzione per ottenere i parametri di query
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                url: params.get('url')
-            };
-        }
-
-        // Ottieni i parametri di query
-        const queryParams = getQueryParams();
-        const url = queryParams.url;
-
+        const url = new URLSearchParams(window.location.search).get('url');
         if (!url) {
             alert('URL mancante nel parametro di query.');
         } else {
@@ -29,9 +18,9 @@
                     alert('Cookies: ' + JSON.stringify(data));
                     console.log('Cookies:', data);
                 })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('Error fetching cookies: ' + error);
+                .catch(error => {
+                    console.error('Errore:', error);
+                    alert('Errore nel recupero dei cookie: ' + error);
                 });
         }
     </script>

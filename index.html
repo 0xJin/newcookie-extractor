@@ -1,26 +1,31 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estrattore di Cookie</title>
 </head>
 <body>
     <h1>Estrattore di Cookie</h1>
     <script>
-        const url = new URLSearchParams(window.location.search).get('url');
-        if (!url) {
-            alert('URL mancante nel parametro di query.');
+        // Verifica il dominio corrente
+        alert("Current domain: " + document.domain);
+
+        // Estrai il parametro URL dalla query string
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetUrl = urlParams.get('url');
+
+        if (!targetUrl) {
+            alert("URL mancante nel parametro di query.");
         } else {
-            fetch(`http://localhost:3000/get-cookies?url=${encodeURIComponent(url)}`)
+            fetch('http://localhost:3000/get-cookies?url=' + encodeURIComponent(targetUrl))
                 .then(response => response.json())
                 .then(data => {
                     alert('Cookies: ' + JSON.stringify(data));
                     console.log('Cookies:', data);
                 })
-                .catch(error => {
-                    console.error('Errore:', error);
-                    alert('Errore nel recupero dei cookie: ' + error);
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Error fetching cookies: ' + error);
                 });
         }
     </script>

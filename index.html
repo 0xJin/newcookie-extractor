@@ -8,32 +8,32 @@
 <body>
     <h1>Estrattore di Cookie</h1>
     <script>
-        function fetchCookies() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const targetUrl = urlParams.get('url');
-            
-            if (!targetUrl) {
-                alert('URL mancante nel parametro di query.');
-                return;
-            }
-
-            fetch(`http://localhost:3000/proxy?url=${encodeURIComponent(targetUrl)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        alert('Errore: ' + data.error);
-                    } else {
-                        alert('Cookies: ' + JSON.stringify(data.cookies));
-                        console.log('Cookies:', data.cookies);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Errore:', error);
-                    alert('Errore nel recupero dei cookie: ' + error);
-                });
+        // Funzione per ottenere i parametri di query
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                url: params.get('url')
+            };
         }
 
-        document.addEventListener('DOMContentLoaded', fetchCookies);
+        // Ottieni i parametri di query
+        const queryParams = getQueryParams();
+        const url = queryParams.url;
+
+        if (!url) {
+            alert('URL mancante nel parametro di query.');
+        } else {
+            fetch(`http://localhost:3000/get-cookies?url=${encodeURIComponent(url)}`)
+                .then(response => response.json())
+                .then(data => {
+                    alert('Cookies: ' + JSON.stringify(data));
+                    console.log('Cookies:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Error fetching cookies: ' + error);
+                });
+        }
     </script>
 </body>
 </html>

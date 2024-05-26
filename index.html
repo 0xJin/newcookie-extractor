@@ -3,38 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estrattore di Cookie</title>
+    <title>Cookie Extractor</title>
 </head>
 <body>
-    <h1>Estrattore di Cookie</h1>
+    <h1>Cookie Extractor</h1>
     <script>
         // Funzione per ottenere i parametri di query
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
             return {
                 url: params.get('url')
-            };
-        }
-
-        // Funzione per inviare i cookie tramite WebSocket
-        function sendCookiesViaWebSocket(cookies) {
-            const ws = new WebSocket('ws://localhost:8080');
-
-            ws.onopen = () => {
-                console.log('WebSocket connection opened');
-                ws.send(cookies);
-            };
-
-            ws.onmessage = (event) => {
-                console.log('Message from server:', event.data);
-            };
-
-            ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
-            };
-
-            ws.onclose = () => {
-                console.log('WebSocket connection closed');
             };
         }
 
@@ -46,21 +24,17 @@
             alert('URL mancante nel parametro di query.');
         } else {
             fetch(`http://localhost:3000/proxy?url=${encodeURIComponent(url)}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
+                .then(response => response.text())
                 .then(data => {
-                    const cookies = JSON.stringify(data.cookies);
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(data, 'text/html');
+                    const cookies = doc.cookie;
                     alert('Cookies: ' + cookies);
                     console.log('Cookies:', cookies);
-                    sendCookiesViaWebSocket(cookies);
                 })
                 .catch((error) => {
                     console.error('Error:', error);
-                    alert('Error fetching cookies: ' + error.message);
+                    alert('Error fetching cookies: ' + error);
                 });
         }
     </script>

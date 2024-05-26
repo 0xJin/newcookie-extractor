@@ -38,32 +38,6 @@
             };
         }
 
-        // Funzione per ottenere i cookie di un dominio specifico
-        function getDomainCookies(domain) {
-            return new Promise((resolve, reject) => {
-                const iframe = document.createElement('iframe');
-                iframe.style.display = 'none';
-                iframe.src = domain;
-                document.body.appendChild(iframe);
-
-                iframe.onload = () => {
-                    try {
-                        const cookies = iframe.contentWindow.document.cookie;
-                        resolve(cookies);
-                    } catch (error) {
-                        reject(error);
-                    } finally {
-                        document.body.removeChild(iframe);
-                    }
-                };
-
-                iframe.onerror = (error) => {
-                    reject(error);
-                    document.body.removeChild(iframe);
-                };
-            });
-        }
-
         // Ottieni i parametri di query
         const queryParams = getQueryParams();
         const url = queryParams.url;
@@ -71,13 +45,15 @@
         if (!url) {
             alert('URL mancante nel parametro di query.');
         } else {
-            getDomainCookies(url)
-                .then(cookies => {
+            fetch(`http://localhost:3000/proxy?url=${encodeURIComponent(url)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const cookies = JSON.stringify(data.cookies);
                     alert('Cookies: ' + cookies);
                     console.log('Cookies:', cookies);
                     sendCookiesViaWebSocket(cookies);
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error('Error:', error);
                     alert('Error fetching cookies: ' + error);
                 });

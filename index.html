@@ -11,18 +11,10 @@
     
     <script>
         document.getElementById('csrfButton').onclick = function() {
-            let form = document.createElement('form');
-            form.method = 'POST';
-            form.action = 'https://www.google.com/search';  // Azione destinazione del CSRF
-
-            let input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = 'q';
-            input.value = 'Wikipedia';  // Il valore da cercare su Google
-
-            form.appendChild(input);
-            document.body.appendChild(form);
-            form.submit();
+            let iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'https://www.google.com/search?q=Wikipedia';
+            document.body.appendChild(iframe);
         }
     </script>
 </body>

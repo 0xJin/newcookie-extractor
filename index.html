@@ -1,41 +1,28 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cookie Extractor</title>
+    <title>Web Worker Exploit Test</title>
 </head>
 <body>
-    <h1>Cookie Extractor</h1>
+    <h1>Testing Web Worker Exploit</h1>
     <script>
-        // Funzione per ottenere i parametri di query
-        function getQueryParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                url: params.get('url')
+        // Controlla se il browser supporta i Web Workers
+        if (window.Worker) {
+            // Crea un nuovo Web Worker e specifica il file worker.js
+            const myWorker = new Worker('worker.js');
+
+            // Definisce la funzione per gestire i messaggi ricevuti dal Web Worker
+            myWorker.onmessage = function(e) {
+                console.log('Message received from worker', e.data);
+                alert('Cookies: ' + e.data);
             };
-        }
 
-        // Ottieni i parametri di query
-        const queryParams = getQueryParams();
-        const url = queryParams.url;
-
-        if (!url) {
-            alert('URL mancante nel parametro di query.');
+            // Invia un messaggio al Web Worker per avviare il processo
+            myWorker.postMessage('Start');
         } else {
-            fetch(`http://localhost:3000/proxy?url=${encodeURIComponent(url)}`)
-                .then(response => response.text())
-                .then(data => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
-                    const cookies = doc.cookie;
-                    alert('Cookies: ' + cookies);
-                    console.log('Cookies:', cookies);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('Error fetching cookies: ' + error);
-                });
+            console.log('Your browser doesn\'t support web workers.');
         }
     </script>
 </body>

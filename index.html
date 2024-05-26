@@ -45,7 +45,7 @@
         if (!url) {
             alert('URL mancante nel parametro di query.');
         } else {
-            fetch(`http://localhost:3000/get-cookies?url=${encodeURIComponent(url)}`)
+            fetch(`http://localhost:3000/proxy?url=${encodeURIComponent(url)}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');

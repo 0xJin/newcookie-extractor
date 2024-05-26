@@ -45,8 +45,13 @@
         if (!url) {
             alert('URL mancante nel parametro di query.');
         } else {
-            fetch(`http://localhost:3000/proxy?url=${encodeURIComponent(url)}`)
-                .then(response => response.json())
+            fetch(`http://localhost:3000/get-cookies?url=${encodeURIComponent(url)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     const cookies = JSON.stringify(data.cookies);
                     alert('Cookies: ' + cookies);
@@ -55,7 +60,7 @@
                 })
                 .catch((error) => {
                     console.error('Error:', error);
-                    alert('Error fetching cookies: ' + error);
+                    alert('Error fetching cookies: ' + error.message);
                 });
         }
     </script>

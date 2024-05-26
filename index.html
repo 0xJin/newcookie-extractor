@@ -3,27 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Web Worker Exploit Test</title>
+    <title>Command Injection Test</title>
 </head>
 <body>
-    <h1>Testing Web Worker Exploit</h1>
+    <h1>Command Injection Test</h1>
+    <form id="commandForm">
+        <label for="command">Command:</label>
+        <input type="text" id="command" name="command">
+        <button type="submit">Execute</button>
+    </form>
+    <pre id="output"></pre>
     <script>
-        // Controlla se il browser supporta i Web Workers
-        if (window.Worker) {
-            // Crea un nuovo Web Worker e specifica il file worker.js
-            const myWorker = new Worker('worker.js');
-
-            // Definisce la funzione per gestire i messaggi ricevuti dal Web Worker
-            myWorker.onmessage = function(e) {
-                console.log('Message received from worker', e.data);
-                alert('Cookies: ' + e.data);
-            };
-
-            // Invia un messaggio al Web Worker per avviare il processo
-            myWorker.postMessage('Start');
-        } else {
-            console.log('Your browser doesn\'t support web workers.');
-        }
+        document.getElementById('commandForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const command = document.getElementById('command').value;
+            fetch(`http://localhost:3000/execute?command=${encodeURIComponent(command)}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('output').textContent = data;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('output').textContent = 'Error: ' + error;
+                });
+        });
     </script>
 </body>
 </html>

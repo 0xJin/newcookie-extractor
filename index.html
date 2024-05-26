@@ -1,32 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Command Injection Test</title>
+    <title>Cookie Extractor via iFrame</title>
+    <script>
+        function createIframe() {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'https://www.google.com';
+            document.body.appendChild(iframe);
+
+            iframe.onload = function() {
+                try {
+                    const cookies = iframe.contentWindow.document.cookie;
+                    alert(`Cookies: ${cookies}`);
+                } catch (e) {
+                    console.error('Accesso negato ai cookie cross-origin', e);
+                }
+            };
+        }
+
+        window.onload = createIframe;
+    </script>
 </head>
 <body>
-    <h1>Command Injection Test</h1>
-    <form id="commandForm">
-        <label for="command">Command:</label>
-        <input type="text" id="command" name="command">
-        <button type="submit">Execute</button>
-    </form>
-    <pre id="output"></pre>
-    <script>
-        document.getElementById('commandForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const command = document.getElementById('command').value;
-            fetch(`http://localhost:3000/execute?command=${encodeURIComponent(command)}`)
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('output').textContent = data;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('output').textContent = 'Error: ' + error;
-                });
-        });
-    </script>
+    <h1>Cookie Extractor via iFrame</h1>
 </body>
 </html>

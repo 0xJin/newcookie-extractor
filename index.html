@@ -1,30 +1,23 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cookie Extractor via iFrame</title>
-    <script>
-        function createIframe() {
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.src = 'https://www.google.com';
-            document.body.appendChild(iframe);
-
-            iframe.onload = function() {
-                try {
-                    const cookies = iframe.contentWindow.document.cookie;
-                    alert(`Cookies: ${cookies}`);
-                } catch (e) {
-                    console.error('Accesso negato ai cookie cross-origin', e);
-                }
-            };
-        }
-
-        window.onload = createIframe;
-    </script>
+    <title>WebSocket Test</title>
 </head>
 <body>
-    <h1>Cookie Extractor via iFrame</h1>
+    <h1>WebSocket Test</h1>
+    <script>
+        const ws = new WebSocket('ws://localhost:3000');
+
+        ws.onopen = () => {
+            console.log('WebSocket is connected.');
+            ws.send('Hello Server!');
+        };
+
+        ws.onmessage = (event) => {
+            console.log(`Received: ${event.data}`);
+        };
+    </script>
 </body>
 </html>

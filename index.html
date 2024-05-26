@@ -3,38 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSocket CSRF Test</title>
+    <title>CSRF Test</title>
 </head>
 <body>
-    <h1>WebSocket CSRF Test</h1>
-    <button onclick="sendCSRF()">Send CSRF</button>
-
+    <h1>CSRF Test</h1>
+    <button id="csrfButton">Send CSRF</button>
+    
     <script>
-        const socket = new WebSocket('ws://localhost:3000');
+        document.getElementById('csrfButton').onclick = function() {
+            let form = document.createElement('form');
+            form.method = 'POST';
+            form.action = 'https://www.google.com/search';  // Azione destinazione del CSRF
 
-        socket.onopen = function(event) {
-            console.log('Connected to WebSocket server');
-        };
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'q';
+            input.value = 'Wikipedia';  // Il valore da cercare su Google
 
-        socket.onmessage = function(event) {
-            const csrfPayload = event.data;
-            executeCSRF(csrfPayload);
-        };
-
-        function sendCSRF() {
-            socket.send('command=csrf');
-        }
-
-        function executeCSRF(payload) {
-            const url = `http://localhost:3000/test-csrf?q=${encodeURIComponent(payload)}`;
-            fetch(url, {
-                method: 'GET',
-                mode: 'no-cors'
-            }).then(response => {
-                console.log('CSRF request sent', response);
-            }).catch(error => {
-                console.error('Error sending CSRF request', error);
-            });
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
         }
     </script>
 </body>

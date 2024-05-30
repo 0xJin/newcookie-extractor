@@ -1,8 +1,8 @@
 {
-  "name": "malicious-extension",
+  "name": "newcookie-extractor",
   "description": "This extension demonstrates a simple XSS attack",
   "version": "1.0.0",
-  "author": "You",
+  "author": "0xJin",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"

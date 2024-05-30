@@ -1,0 +1,11 @@
+{
+  "name": "malicious-extension",
+  "description": "This extension demonstrates a simple XSS attack",
+  "version": "1.0.0",
+  "author": "You",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {}
+}
